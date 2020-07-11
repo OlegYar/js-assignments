@@ -599,7 +599,7 @@ function getIntervalArray(start, end) {
 function distinct(arr) {
    let array = [];
    function getUnique (item) {
-      if (!array.includes(item)) {
+      if (array.indexOf(item) < 0) {
          array.push(item);
       }
       return item;
