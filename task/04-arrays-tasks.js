@@ -674,7 +674,17 @@ function selectMany(arr, childrenSelector) {
       return childrenSelector(item);
     }
     let array = arr.map(select);
-    return array.flat();
+    let array1 = [];
+    function fl (item, index) {
+      if (index == 0) {
+         array1 = item;
+      } else {
+        array1 = array1.concat(item);
+      }
+
+   }
+   array.map(fl);
+   return array1;
 }
 
 
