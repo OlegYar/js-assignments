@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /**************************************************************************************************
  *                                                                                                *
@@ -7,7 +7,6 @@
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object        *
  *                                                                                                *
  **************************************************************************************************/
-
 
 /**
  * Returns the rectagle object with width and height parameters and getArea() method
@@ -23,13 +22,12 @@
  *    console.log(r.getArea());   // => 200
  */
 function Rectangle(width, height) {
-    this.width = width;
-    this.height = height;
-    this.getArea = function() {
-        return this.width * this.height;
-    };
+  this.width = width;
+  this.height = height;
+  Rectangle.prototype.getArea = function () {
+    return this.width * this.height;
+  };
 }
-
 
 /**
  * Returns the JSON representation of specified object
@@ -42,9 +40,8 @@ function Rectangle(width, height) {
  *    { width: 10, height : 20 } => '{"height":10,"width":20}'
  */
 function getJSON(obj) {
-    return JSON.stringify(obj);
+  return JSON.stringify(obj);
 }
-
 
 /**
  * Returns the object of specified type from JSON representation
@@ -58,9 +55,8 @@ function getJSON(obj) {
  *
  */
 function fromJSON(proto, json) {
-    throw new Error('Not implemented');
+  return Object.setPrototypeOf(JSON.parse(json), proto);
 }
-
 
 /**
  * Css selectors builder
@@ -111,40 +107,113 @@ function fromJSON(proto, json) {
  */
 
 const cssSelectorBuilder = {
+  string: "",
+  nameArr: [],
+  numberArr: [],
 
-    element: function(value) {
-        throw new Error('Not implemented');
-    },
+  element: function (value) {
+    this.string += value;
+    this.nameArr.push("element");
+    this.numberArr.push(0);
+    this.checkUnique("element");
+    this.checkNumber();
 
-    id: function(value) {
-        throw new Error('Not implemented');
-    },
+    return this.newObj(this);
+  },
 
-    class: function(value) {
-        throw new Error('Not implemented');
-    },
+  id: function (value) {
+    this.string += `#${value}`;
+    this.nameArr.push("id");
+    this.numberArr.push(1);
+    this.checkUnique("id");
+    this.checkNumber();
 
-    attr: function(value) {
-        throw new Error('Not implemented');
-    },
+    return this.newObj(this);
+  },
 
-    pseudoClass: function(value) {
-        throw new Error('Not implemented');
-    },
+  class: function (value) {
+    this.string += `.${value}`;
+    this.numberArr.push(2);
+    this.checkNumber();
 
-    pseudoElement: function(value) {
-        throw new Error('Not implemented');
-    },
+    return this.newObj(this);
+  },
 
-    combine: function(selector1, combinator, selector2) {
-        throw new Error('Not implemented');
-    },
+  attr: function (value) {
+    this.string += `[${value}]`;
+    this.numberArr.push(3);
+    this.checkNumber();
+
+    return this.newObj(this);
+  },
+
+  pseudoClass: function (value) {
+    this.string += `:${value}`;
+    this.numberArr.push(4);
+    this.checkNumber();
+
+    return this.newObj(this);
+  },
+
+  pseudoElement: function (value) {
+    this.string += `::${value}`;
+    this.nameArr.push("pseudo-elem");
+    this.numberArr.push(5);
+    this.checkUnique("pseudo-elem");
+    this.checkNumber();
+
+    return this.newObj(this);
+  },
+
+  combine: function (selector1, combinator, selector2) {
+    this.string = selector1.string + ` ${combinator} ` + selector2.string;
+
+    return this.newObj(this);
+  },
+
+  stringify() {
+    const result = this.string;
+    this.string = "";
+
+    return result;
+  },
+
+  newObj(object) {
+    const obj = Object.assign({}, object);
+    object.string = "";
+    object.nameArr = [];
+    object.numberArr = [];
+
+    return obj;
+  },
+
+  checkUnique(element) {
+    const arr = this.nameArr;
+
+    if (arr.indexOf(element) !== arr.lastIndexOf(element)) {
+      throw new Error(
+        "Element, id and pseudo-element should not occur " +
+          "more then one time inside the selector"
+      );
+    }
+  },
+
+  checkNumber() {
+    const sortedArray = this.numberArr.slice().sort((a, b) => a - b);
+    sortedArray.forEach((el, i) => {
+      if (el !== this.numberArr[i]) {
+        throw new Error(
+          "Selector parts should be arranged in the following " +
+            "order: element, id, class, attribute, pseudo-class, pseudo-element"
+        );
+      }
+    });
+  },
 };
 
-
 module.exports = {
-    Rectangle: Rectangle,
-    getJSON: getJSON,
-    fromJSON: fromJSON,
-    cssSelectorBuilder: cssSelectorBuilder
+  Rectangle: Rectangle,
+  getJSON: getJSON,
+  fromJSON: fromJSON,
+  cssSelectorBuilder: cssSelectorBuilder,
 };
