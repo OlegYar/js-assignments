@@ -40,18 +40,11 @@ function findElement(arr, value) {
 function generateOdds(len) {
    
    function makeOdd (item, index) {
-      if (index == 0) {
-         item = 1;
-      } else {
-         item = index + num;
-         num++;
-      }
-      return item;
+      return index * 2 + 1;
    }
 
    let arr = new Array(len);
-   arr.fill(0, 0);
-   let num = 2;
+   arr.fill(0);
    return arr.map(makeOdd)
 }
 
