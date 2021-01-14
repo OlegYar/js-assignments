@@ -154,7 +154,12 @@ function retry(func, attempts) {
  *
  */
 function logger(func, logFunc) {
-    throw new Error('Not implemented');
+    return (...argument) => {
+        logFunc(`${func.name}(${argument.map(arg => JSON.stringify(arg))}) starts`);
+        logger.result = func(...argument);
+        logFunc(`${func.name}(${argument.map(arg => JSON.stringify(arg))}) ends`);
+        return logger.result;
+      };
 }
 
 
