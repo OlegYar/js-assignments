@@ -272,36 +272,7 @@ function isString(value) {
  *   'K♠' => 51
  */
 function getCardId(value) {
-    let index = 0;
-    switch (value.slice(-1)) {
-        case '♦':
-            index = 13;
-            break;
-        case '♥':
-            index = 26;
-            break;
-        case '♠':
-            index = 39;
-            break;
-    }
-    switch (value.slice(0, -1)) {
-        case 'A':
-            index += 0;
-            break;
-        case 'J':
-            index += 10;
-            break;
-        case 'Q':
-            index += 11;
-            break;
-        case 'K':
-            index += 12;
-            break;
-        default:
-            index += +value.slice(0, -1) - 1;
-    }
-
-    return index;
+    return '♣♦♥♠'.indexOf(value.slice(-1)) * 13 + 'A234567891JQK'.indexOf(value.charAt(0));
 }
 
 
