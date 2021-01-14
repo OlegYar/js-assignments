@@ -224,18 +224,9 @@ function getRectangleString(width, height) {
  *
  */
 function encodeToRot13(str) {
-    let value = '';
-    for (let i = 0; i < str.length; i++) {
-        let char = str.codePointAt(i);
-        if (char >= 65 && char < 78 || char >= 97 && char < 110) {
-            value += String.fromCodePoint(char + 13);
-        } else if (char >= 78 && char <= 90 || char >= 110 && char <=122) {
-            value += String.fromCodePoint(char - 13);
-        } else {
-            value += str[i];
-        }
-    }
-    return value;
+    const first = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    const second = 'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm';
+    return str.replace(/\w/g, match => first.charAt(second.indexOf(match)));
 }
 
 /**
