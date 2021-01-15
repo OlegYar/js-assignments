@@ -413,15 +413,7 @@ function getFalsyValuesCount(arr) {
  *    [ true, 0, 1, 'true' ], true => 1
  */
 function findAllOccurences(arr, item) {
-   let num = 0;
-   function findOccurence (element) {
-      if (element === item) {
-         num++
-         return element;
-      }
-   }
-   arr.map(findOccurence);
-   return num;
+   return arr.filter(el => el === item).length;
 }
 
 /**
