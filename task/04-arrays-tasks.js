@@ -290,23 +290,6 @@ function getSecondItems(arr) {
  */
 function propagateItemsByPositionIndex(arr) {
    return [].concat(arr.map((item, index) => new Array(index + 1).fill(item))).flat();
-   
-   
-   
-   /* if (arr.length == 1 || arr.length == 0) {
-      return arr;
-    } 
-     let arr1 = [arr[0]];
-     function propagate (item, index) {
-       if (index != 0) { 
-       let array = new Array(index + 1);
-        array.fill(item);
-        arr1 = arr1.concat(array);
-       }
-        return item;
-     }
-     arr.map(propagate);
-     return arr1; */
 }
 
 
