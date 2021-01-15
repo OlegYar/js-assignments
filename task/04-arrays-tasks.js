@@ -329,15 +329,7 @@ function get3TopItems(arr) {
  *   [ 1, '2' ] => 1
  */
 function getPositivesCount(arr) {
-   let count = 0;
-   function getCount (item) {
-      if (typeof item == 'number' && item > 0) {
-         count++;
-      }
-      return item;
-   }
-   arr.map(getCount);
-   return count;
+   return arr.filter(item => typeof item == 'number' && item > 0).length;
 }
  
 /** 
