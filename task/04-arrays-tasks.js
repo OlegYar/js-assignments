@@ -289,7 +289,11 @@ function getSecondItems(arr) {
  *  [ 1,2,3,4,5 ] => [ 1, 2,2, 3,3,3, 4,4,4,4, 5,5,5,5,5 ]
  */
 function propagateItemsByPositionIndex(arr) {
-   if (arr.length == 1 || arr.length == 0) {
+   return [].concat(arr.map((item, index) => new Array(index + 1).fill(item))).flat();
+   
+   
+   
+   /* if (arr.length == 1 || arr.length == 0) {
       return arr;
     } 
      let arr1 = [arr[0]];
@@ -302,7 +306,7 @@ function propagateItemsByPositionIndex(arr) {
         return item;
      }
      arr.map(propagate);
-     return arr1;
+     return arr1; */
 }
 
 
