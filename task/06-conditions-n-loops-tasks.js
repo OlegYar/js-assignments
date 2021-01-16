@@ -135,53 +135,7 @@ function isTriangle(a,b,c) {
  *  
  */
 function doRectanglesOverlap(rect1, rect2) {
-    let x11 = rect1.left;
-    let x12 = rect1.width + rect1.left;
-    let x13 = x12;
-    let x14 = x11;
-    let y11 = rect1.top;
-    let y12 = y11;
-    let y13 = rect1.height + rect1.top;
-    let y14 = y13;
-    let x21 = rect2.left;
-    let x22 = rect2.left + rect2.width;
-    let x23 = x22;
-    let x24 = x21;
-    let y21 = rect2.top;
-    let y22 = y21;
-    let y23 = rect2.top + rect2.height;
-    let y24 = y23;
-    let count1 = 0;
-    let count2 = 0;
-    if (x21 >= x11 && x21 <= x12 && y21 >= y11 && y21 <= y14) {
-        count1++;
-    } 
-    if (x22 >= x11 && x22 <= x12 && y22 >= y11 && y22 <= y14) {
-        count1++;
-    } 
-    if (x23 >= x11 && x23 <= x12 && y23 >= y11 && y23 <= y14) {
-        count1++;
-    }
-    if (x24 >= x11 && x24 <= x12 && y24 >= y11 && y24 <= y14) {
-        count1++;
-    }
-    if (x11 >= x21 && x11 <= x22 && y11 >= y21 && y11 <= y24) {
-        count2++;
-    }
-    if (x12 >= x21 && x12 <= x22 && y12 >= y22 && y12 <= y24) {
-        count2++;
-    }
-    if (x13 >= x21 && x13 <= x22 && y13 >= y21 && y13 <= y24) {
-        count2++;
-    }
-    if (x14 >= x21 && x14 <= x22 && y14 >= y21 && y14 <= y24) {
-        count2++;
-    }
-    if (count1 <= 4 && count1 > 0 || count2 <= 4 && count2 > 0) {
-        return true;
-    } else {
-        return false;
-    }
+    return rect1.top + rect1.height >= rect2.top && rect1.left + rect1.width >= rect2.left;
 }
 
 
