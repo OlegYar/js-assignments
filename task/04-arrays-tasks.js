@@ -556,7 +556,10 @@ function distinct(arr) {
  *   }
  */
 function group(array, keySelector, valueSelector) {
-   let map = new Map();
+   return new Map(array.map(keySelector).map(country => [country, array.filter(item => keySelector(item) === country).map(valueSelector)]));
+   
+   
+   /* let map = new Map();
    function gr (item) {
       let country = keySelector(item);
       let city = valueSelector(item);
@@ -571,7 +574,7 @@ function group(array, keySelector, valueSelector) {
       return item;
    }
    array.map(gr);
-   return map;
+   return map; */
 }
 
 
