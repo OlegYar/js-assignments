@@ -572,21 +572,7 @@ function group(array, keySelector, valueSelector) {
  *   ['one','two','three'], x=>x.split('')  =>   ['o','n','e','t','w','o','t','h','r','e','e']
  */
 function selectMany(arr, childrenSelector) {
-   function select (item) { 
-      return childrenSelector(item);
-    }
-    let array = arr.map(select);
-    let array1 = [];
-    function fl (item, index) {
-      if (index == 0) {
-         array1 = item;
-      } else {
-        array1 = array1.concat(item);
-      }
-
-   }
-   array.map(fl);
-   return array1;
+   return [].concat(arr.map(item => childrenSelector(item))).flat();
 }
 
 
