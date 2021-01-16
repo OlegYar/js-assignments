@@ -98,18 +98,7 @@ function getSumBetweenNumbers(n1, n2) {
  *   10,10,10 =>  true
  */
 function isTriangle(a,b,c) {
-    let value = b > c ? 'bigger' : 'smaller';
-    if (value == 'bigger') {
-        if (a < b + c && a > b - c) {
-            return true;
-        } else {
-            return false;
-        }
-    } else if (a < b + c && a > c - b) {
-        return true;
-    } else {
-        return false;
-    }
+    return ((a + b) > c) && ((b + c) > a) && ((a + c) > b);
 }
 
 
