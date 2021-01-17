@@ -426,49 +426,27 @@ function timespanToHumanString(startDate, endDate) {
     } else if (sec > 45 && sec <= 90) {
         return `a minute ago`;
     } else if (sec > 90 && min <= 45) {
-        if (min < 2) {
-            return `2 minutes ago`
-        } else {return `${Math.floor(min)} minutes ago`}
+        return (min < 2) ? `2 minutes ago` : `${Math.floor(min)} minutes ago`;
     } else if (min > 45 && min <= 90) {
         return `an hour ago`;
     } else if (min > 90 && hour <= 22) {
-        if (hour < 2) {
-            return `2 hours ago`;
-        } else if (Math.fround(hour) - (hour - 0.5) == 0.5 ) {
-            return `${Math.floor(hour)} hours ago`;
-        } else {
-            return `${Math.round(hour)} hours ago`;
-        }
+        return (hour < 2) ? `2 hours ago` : 
+        (Math.fround(hour) - (hour - 0.5) == 0.5) ? `${Math.floor(hour)} hours ago` : `${Math.round(hour)} hours ago`;
     } else if (hour > 22 && hour <= 36) {
         return `a day ago`;
     } else if (hour > 36 && day <= 25) {
-        if (day < 2) {
-            return `2 days ago`;
-          } else if (Math.fround(day) - (day - 0.5) == 0.5) {
-            return `${Math.floor(day)} days ago`;
-          } else {
-            return `${Math.round(day)} days ago`;
-        }
+        return (day < 2) ? `2 days ago` : 
+        (Math.fround(day) - (day - 0.5) == 0.5) ? `${Math.floor(day)} days ago` : `${Math.round(day)} days ago`;
     } else if (day > 25 && day <= 45) {
         return `a month ago`;
     } else if (day > 45 && day <= 345) {
-        if (month < 2) {
-            return `2 months ago`;
-        } else if (Math.fround(month) - (month - 0.5) == 0.5) {
-            return `${Math.floor(month)} months ago`;
-        } else {
-            return `${Math.round(month)} months ago`;
-        }
+        return (month < 2) ? `2 months ago` : 
+        (Math.fround(month) - (month - 0.5) == 0.5) ? `${Math.floor(month)} months ago` : `${Math.round(month)} months ago`;
     } else if (day > 345 && day <= 545) {
         return `a year ago`;
     } else {
-        if (year < 2) {
-            return `2 years ago`;
-        } else if (Math.fround(year) - (year - 0.5) == 0.5) {
-            return `${Math.floor(yer)} years ago`;
-        } else {
-            return `${Math.round(year)} years ago`;
-        }
+        return (year < 2) ? `2 years ago` : 
+        (Math.fround(year) - (year - 0.5) == 0.5) ? `${Math.floor(yer)} years ago` : `${Math.round(year)} years ago`;
     }
 }
 
