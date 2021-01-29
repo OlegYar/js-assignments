@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /**
  * Returns the array of 32 compass points and heading.
@@ -17,10 +17,29 @@
  *  ]
  */
 function createCompassPoints() {
-    throw new Error('Not implemented');
-    var sides = ['N','E','S','W'];  // use array of cardinal directions only!
-}
+    const sides = ["N", "E", "S", "W"]; // use array of cardinal directions only!
+    const azimuthPerPoint = 11.25,
+        pointsPerCardinal = 8,
+        cardinalsNum = 4;
 
+    let azimuth = 0,
+        compass = [];
+
+    sides.map((item, index) => {
+        let next = index !== cardinalsNum - 1 ? sides[index + 1] : sides[0],
+        half = next === "S" || next === "N" ? next + item : item + next,
+        first = [item, item, item, half, half, half, next, next],
+        second = ["", next, half, item, "", next, half, item];
+
+        for (let point = 0; point < pointsPerCardinal; point++) {
+        let abbr = first[point] + (point % 2 === 1 ? "b" : "") + second[point];
+        azimuth = (point + index * pointsPerCardinal) * azimuthPerPoint;
+
+        compass.push({ abbreviation: abbr, azimuth: azimuth });
+        }
+    });
+    return compass;
+}
 
 /**
  * Expand the braces of the specified string.
@@ -56,9 +75,24 @@ function createCompassPoints() {
  *   'nothing to do' => 'nothing to do'
  */
 function* expandBraces(str) {
-    throw new Error('Not implemented');
-}
+    let queue = [str],
+    results = [],
+    regex = /{([^\{\}]+)}/;
 
+    while (queue.length) {
+        let item = queue.shift(),
+            matches = item.match(regex);
+
+        if (matches !== null) {
+            matches[1].split(',').map(cur => {
+                queue.push(item.replace(matches[0], cur));
+            });
+        } else if (results.indexOf(item) === -1) {
+            results.push(item);
+            yield item;
+        }
+}
+}
 
 /**
  * Returns the ZigZag matrix
@@ -88,9 +122,22 @@ function* expandBraces(str) {
  *
  */
 function getZigZagMatrix(n) {
-    throw new Error('Not implemented');
-}
+    let matrix = Array.from({length: n}, x => Array.from({length: n}));   
+    let i = 1,
+        j = 1;
 
+    for (let e = 0; e < n*n; e++) {
+        matrix[i - 1][j - 1] = e;
+        if ((i + j) % 2 == 0) {
+            (j < n) ? j++ : i += 2;  
+            if (i > 1) i --;
+        } else {
+            (i < n) ? i++ : j += 2;
+            if (j > 1) j--;
+        }
+    }
+    return matrix;
+}
 
 /**
  * Returns true if specified subset of dominoes can be placed in a row accroding to the game rules.
@@ -112,10 +159,9 @@ function getZigZagMatrix(n) {
  * [[0,0], [0,1], [1,1], [0,2], [1,2], [2,2], [0,3], [1,3], [2,3], [3,3]] => false
  *
  */
-function canDominoesMakeRow(dominoes) {
-    throw new Error('Not implemented');
+function canDominoesMakeRow(dominoes) { 
+    return dominoes.map(x => x[0] + x[1]).reduce((prev, item) => prev + item) % 2 != 0;
 }
-
 
 /**
  * Returns the string expression of the specified ordered list of integers.
@@ -137,13 +183,36 @@ function canDominoesMakeRow(dominoes) {
  * [ 1, 2, 4, 5]          => '1,2,4,5'
  */
 function extractRanges(nums) {
-    throw new Error('Not implemented');
+    let arr = [];
+    let subarr = [nums[0]];
+
+    for (let i = 1; i < nums.length; i++) {
+        if (nums[i] - nums[i - 1] == 1) {
+            subarr.push(nums[i]);
+        } else {
+            if (subarr.length > 2) {
+                arr.push(`${subarr[0]}-${subarr[subarr.length - 1]}`);
+                subarr = [nums[i]];
+            } else {
+                arr = arr.concat(subarr);
+                subarr = [nums[i]];
+            }
+        }
+    }
+
+    if (subarr.length > 2) {
+        arr.push(`${subarr[0]}-${subarr[subarr.length - 1]}`);
+    } else {
+        arr = arr.concat(subarr);
+    }
+
+    return arr.join(',');
 }
 
 module.exports = {
-    createCompassPoints : createCompassPoints,
-    expandBraces : expandBraces,
-    getZigZagMatrix : getZigZagMatrix,
-    canDominoesMakeRow : canDominoesMakeRow,
-    extractRanges : extractRanges
+  createCompassPoints: createCompassPoints,
+  expandBraces: expandBraces,
+  getZigZagMatrix: getZigZagMatrix,
+  canDominoesMakeRow: canDominoesMakeRow,
+  extractRanges: extractRanges,
 };
