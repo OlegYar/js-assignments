@@ -34,7 +34,16 @@
  *
  */
 function parseBankAccount(bankAccount) {
-    throw new Error('Not implemented');
+    
+    const numbers = [' _ | ||_|','     |  |',' _  _||_ ',' _  _| _|',
+    '   |_|  |',' _ |_  _|',' _ |_ |_|',' _   |  |', ' _ |_||_|',' _ |_| _|'];
+    
+    bankAccount = bankAccount.split('\n');
+    let arr = [];
+    for (let i = 0; i < bankAccount[0].length; i+= 3) {
+        arr.push(bankAccount.reduce((a, b) => a + b.substr(i, 3), ''));
+    }
+    return +arr.map(a => numbers.indexOf(a)).reduce((a, b) => a + b, '');
 }
 
 
@@ -63,7 +72,17 @@ function parseBankAccount(bankAccount) {
  *                                                                                                'characters.'
  */
 function* wrapText(text, columns) {
-    throw new Error('Not implemented');
+    const words = text.split(' ');
+    let row = '';
+    for (let i = 0; i < words.length; i++) {
+        if (row.length + words[i].length > columns) {
+            yield row.slice(0, -1);
+            row = words[i] + ' ';
+        } else {
+            row += words[i] + ' ';
+        }
+    }
+    yield row.slice(0, -1);
 }
 
 
@@ -100,7 +119,78 @@ const PokerRank = {
 }
 
 function getPokerHandRank(hand) {
-    throw new Error('Not implemented');
+    function Get(hand) {
+        
+        const _ranks = 'A234567891JQKA',
+              suits = [],
+              ranks = {
+                  count: [],
+                  values: [],
+                  sorted: []
+              };
+        
+        for (let v of hand) {
+            
+            if (ranks.values.indexOf(v[0]) < 0) {
+                ranks.values.push(v[0]);
+                ranks.count.push(1);
+            } else
+                ranks.count[ranks.values.indexOf(v[0])]++;
+            
+            if (suits.indexOf(v.slice(-1)) < 0)
+                suits.push(v.slice(-1));
+        }
+        ranks.sorted = ranks.values.sort((a, b) => _ranks.indexOf(a) - _ranks.indexOf(b));
+        if (ranks.sorted[0] === 'A' && ranks.sorted[1] !== '2') {
+            ranks.sorted.splice(0, 1);
+            ranks.sorted.push('A');
+        }
+        
+        this.getCount = function (cnt) {
+            let res = 0;
+            for (let v of ranks.count)
+                if (v === cnt)
+                    res++;
+            return res;
+        }
+        
+        this.isFlush = function() {
+            return suits.length === 1;
+        };
+        
+        this.isStraight = function() {
+            if (ranks.sorted.length < 5)
+                return false;
+            for (let i = 1; i < 5; i++)
+                if (
+                    _ranks.indexOf(ranks.sorted[i - 1]) + 1 !== _ranks.indexOf(ranks.sorted[i]) &&
+                    _ranks.indexOf(ranks.sorted[i - 1]) + 1 !== _ranks.lastIndexOf(ranks.sorted[i])
+                )
+                    return false;
+            return true;
+        };
+    }
+    
+    hand = new Get(hand);
+    
+    if (hand.isFlush() && hand.isStraight())
+        return PokerRank.StraightFlush;
+    else if (hand.getCount(4))
+        return PokerRank.FourOfKind;
+    else if (hand.getCount(3) && hand.getCount(2))
+        return PokerRank.FullHouse;
+    else if (hand.isFlush())
+        return PokerRank.Flush;
+    else if (hand.isStraight())
+        return PokerRank.Straight;
+    else if (hand.getCount(3))
+        return PokerRank.ThreeOfKind;
+    else if (hand.getCount(2) == 2)
+        return PokerRank.TwoPairs;
+    else if (hand.getCount(2))
+        return PokerRank.OnePair;
+    else
+        return PokerRank.HighCard;;
 }
 
 
@@ -135,7 +225,51 @@ function getPokerHandRank(hand) {
  *    '+-------------+\n'
  */
 function* getFigureRectangles(figure) {
-   throw new Error('Not implemented');
+    let arr = figure.split('\n'),
+    pluses = [];
+
+    arr.map((cur, line)=> {
+        let i = cur.indexOf('+');
+
+        while(i !== -1) {
+            pluses.push([line, i]);
+            i = cur.indexOf('+', i + 1);
+        }
+    });
+
+    for (let current = 0; current < pluses.length - 1; current++) {
+
+        let next = current + 1;
+
+        while (pluses[next][0] === pluses[current][0]) {
+
+            let y = pluses[current][0],
+                x = pluses[current][1],
+                x2 = pluses[next][1],
+                width = arr[y].slice(x + 1, x2).length,
+                height = 1;
+
+            while (arr[y + height][x]  === '|' && arr[y + height][x2] === '|') {
+                height++;
+            }
+
+            if (arr[y + height][x]  === '+' && arr[y + height][x2] === '+') {
+                yield formRectangle({h: height - 1, w: width});   
+                break;      
+            }
+
+            next++;
+            if (next >= pluses.length) {
+                break;
+            }
+        }
+    }
+
+    function formRectangle(rect) {
+        let topAndBottom = '+'.concat('-'.repeat(rect.w), '+\n');
+        let filler = '|'.concat(' '.repeat(rect.w), '|\n');
+        return topAndBottom.concat(filler.repeat(rect.h), topAndBottom);
+    }
 }
 
 
