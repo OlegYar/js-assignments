@@ -28,7 +28,41 @@
  *   'NULL'      => false 
  */
 function findStringInSnakingPuzzle(puzzle, searchStr) {
-    throw new Error('Not implemented');
+    const puzzleWidth = puzzle[0].length,
+    puzzleHeight = puzzle.length;
+
+    for (let i = 0; i < puzzleWidth; i++) {
+        for (let j = 0; j < puzzleHeight; j++) {
+            if (puzzle[j][i] === searchStr[0] && tryNext(i, j, [], searchStr.slice(1))) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+
+    function tryNext (i, j, visited, search) {
+
+        const steps = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+
+        visited.push(i.toString() + j.toString());
+
+        for (let num = 0; num < steps.length; num++) {
+
+            let newI = i + steps[num][0],
+                newJ = j + steps[num][1],
+                str = String.prototype.concat(newI, newJ);
+
+            if (newI >= puzzleWidth || newI < 0 || newJ >= puzzleHeight || newJ < 0 || visited.indexOf(str) !== -1) {
+                continue;
+            }
+
+            if (puzzle[newJ][newI] === search[0] && (search.length === 1 || tryNext(newI, newJ, visited, search.slice(1)))) {
+                return true;       
+            }
+        }
+        return false; 
+    }
 }
 
 
@@ -45,7 +79,28 @@ function findStringInSnakingPuzzle(puzzle, searchStr) {
  *    'abc' => 'abc','acb','bac','bca','cab','cba'
  */
 function* getPermutations(chars) {
-    throw new Error('Not implemented');
+    const length = chars.length;
+    let stack = [];
+
+    stack.push({string: "", visited: Array(length).fill(false)});
+
+    while (stack.length) {
+
+        let item = stack.pop();
+
+        if (item.string.length === length) {
+            yield item.string;
+        }
+
+        for (let i = 0; i < length; i++) {
+            if (!item.visited[i]) {
+                let newVisited = Array.from(item.visited);
+                newVisited[i] = true;
+                stack.push({string: item.string + chars[i], visited: newVisited});
+            }
+        }
+
+    }
 }
 
 
@@ -65,7 +120,22 @@ function* getPermutations(chars) {
  *    [ 1, 6, 5, 10, 8, 7 ] => 18  (buy at 1,6,5 and sell all at 10)
  */
 function getMostProfitFromStockQuotes(quotes) {
-    throw new Error('Not implemented');
+    let result = 0; 
+    
+    while(quotes.length > 1) { 
+        let max = Math.max(...quotes);
+        let index = quotes.indexOf(max); 
+        
+        if (index == 0) break; 
+        
+        quotes.splice(index, 1); 
+        
+        let sub = quotes.splice(0, index); 
+        
+        result += sub.reduce((prev, item) => prev += max - item, 0); 
+    } 
+    
+    return result;
 }
 
 
@@ -92,12 +162,31 @@ function UrlShortener() {
 UrlShortener.prototype = {
 
     encode: function(url) {
-        throw new Error('Not implemented');
+        let result = '',
+        char = 0;
+        for (let i = 0; i < url.length; i++) {
+            char = char << 7 | (this.urlAllowedChars.indexOf(url[i]) + 1);
+            if (i % 2 || i === url.length - 1) {
+                result += String.fromCharCode(char);
+                char = 0;
+            }
+        }
+        return result;
     },
     
     decode: function(code) {
-        throw new Error('Not implemented');
-    } 
+        const _AND = ~(~0 << 7);
+        let result = '';
+        for (let i = 0; i < code.length; i++) {
+            let char = code.charCodeAt(i);
+            let c = char >> 7 & _AND;
+            if (c)
+                result += this.urlAllowedChars[c - 1];
+            c = char & _AND;
+            result += this.urlAllowedChars[c - 1];
+        }
+        return result;
+    }
 }
 
 
